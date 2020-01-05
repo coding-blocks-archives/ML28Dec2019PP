@@ -1,9 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[2]:
-
-
 
 # Recognise Faces using some classification algorithm - like KNN
 
@@ -17,39 +11,24 @@
 # 5. map the predicted id to name of the user 
 # 6. Display the predictions on the screen - bounding box and name
 
-
-# In[35]:
-
-
 import numpy as np
 import pandas as pd
 import cv2
 import os
 
 
-# In[36]:
-
-
 all_names = os.listdir("data")
-
-
-# In[60]:
 
 
 all_faces = []
 all_labels = []
 
 
-# In[61]:
-
-
 names = {}
 c = 0
 
 
-# In[62]:
-
-
+# Data Preprocessing  - Making structured Data (X, Y) pair of data points
 for name in all_names:    
     print(name +" loaded")
     
@@ -64,40 +43,14 @@ for name in all_names:
         c +=1
 
 
-# In[65]:
-
-
 X = np.concatenate(all_faces, axis = 0)
 Y = np.concatenate(all_labels, axis = 0).reshape(-1, 1)
 
 
-# In[66]:
 
-
-X.shape
-
-
-# In[67]:
-
-
-Y.shape
-
-
-# In[68]:
-
-
-names
-
-
-# In[69]:
-
-
+# KNN Algorithm
 def dist(v1, v2):
     return np.sqrt(np.sum((v1-v2)**2))
-
-
-# In[70]:
-
 
 def knn(X, y, x_query, k = 5):
     m = X.shape[0]
@@ -121,13 +74,11 @@ def knn(X, y, x_query, k = 5):
     return pred
 
 
-# In[ ]:
 
-
+# New Image Capture from WebCam
 cam = cv2.VideoCapture(0)
 
 face_cascade = cv2.CascadeClassifier("haarcascade_frontalface_alt.xml")
-    
 
 
 while True:
@@ -138,6 +89,7 @@ while True:
         
     faces = face_cascade.detectMultiScale(frame, 1.5, 5)
     
+    # If atleast 1 face is found
     if len(faces)>0:
 
         for face in faces:
@@ -155,6 +107,7 @@ while True:
             
             name = names[int(pred)]
             
+            # Add name on the frame
             cv2.putText(frame, name, (x, y-10), cv2.FONT_HERSHEY_SIMPLEX, 1, (255,0,0), 2 , cv2.LINE_AA)
             
     
